@@ -4,4 +4,4 @@ function toastMessage(type, msg) {
     toast[type](msg)
 }
 
-export {toastMessage}
+export { toastMessage}

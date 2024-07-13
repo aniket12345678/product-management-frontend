@@ -3,18 +3,25 @@ import React, { useState } from 'react'
 import { Modal, Button, Form, Row, Col } from 'react-bootstrap'
 import * as yup from 'yup'
 import moment from 'moment'
+import { useDispatch } from 'react-redux';
+
+import { productAdd } from '../../slice/product.slice';
 
 const AddModal = (props) => {
-    const { show, changeModalState } = props;
-
+    const dispatch = useDispatch();
+    const { show, changeModalState, allProducts } = props;
     const [previewImg, setPreviewImg] = useState(null);
     const [storeImg, setStoreImg] = useState('');
+
+    //************************************** yup validation **************************************//
 
     const validateFields = yup.object().shape({
         product: yup.string().required('Enter category'),
         price: yup.number().positive('Amount cannot be negative').required('Enter price'),
         creation_date: yup.string().required('Enter date'),
     });
+
+    //************************************** Formik **************************************//
 
     const { values, errors, handleChange, handleSubmit, resetForm } = useFormik({
         initialValues: {
@@ -24,25 +31,24 @@ const AddModal = (props) => {
         },
         validationSchema: validateFields,
         onSubmit: (values) => {
-            console.log('values:- ', values);
-            // const { id } = adminAuthCheck.getAuthUser();
-            // values.user_id = id;
-            // const formdata = new FormData();
-            // formdata.append('attachments', storeImg);
-            // formdata.append('data', JSON.stringify(values));
-            // dispatch(categoryAdd(formdata)).unwrap().then((response) => {
-            //     if (response.code === 200) {
-            //         resetForm();
-            //         setStoreImg('');
-            //         setPreviewImg(null);
-            //         changeModalState(false)
-            //     }
-            //     console.log('response:- ', response);
-            // }).catch((err) => {
-            //     console.log(err);
-            // })
+            const formdata = new FormData();
+            formdata.append('attachments', storeImg);
+            formdata.append('data', JSON.stringify(values));
+            dispatch(productAdd(formdata)).unwrap().then((response) => {
+                if (response.code === 200) {
+                    allProducts();
+                    resetForm();
+                    setStoreImg('');
+                    setPreviewImg(null);
+                    changeModalState(false)
+                }
+            }).catch((err) => {
+                console.log(err);
+            })
         }
     });
+
+    //************************************** File handling **************************************//
 
     const handleFiles = (data) => {
         setStoreImg(data);
@@ -82,7 +88,7 @@ const AddModal = (props) => {
                         <Col md='6'>
                             <Form.Group className="my-3" controlId="formBasicEmail">
                                 <Form.Control
-                                    type="text"
+                                    type="number"
                                     name='price'
                                     placeholder="Price"
                                     value={values.price}

@@ -1,3 +1,25 @@
+:root {
+    scroll-behavior: smooth;
+}
+
+body {
+    font-family: "Open Sans", sans-serif;
+    background: #f6f9ff;
+    color: #444444;
+}
+
+#main {
+    margin-top: 60px;
+    padding: 20px 200px;
+    transition: all 0.3s;
+}
+
+@media (max-width: 1199px) {
+    #main {
+        padding: 20px;
+    }
+}
+
 .formik-error {
     font-size: 12px;
     color: red;

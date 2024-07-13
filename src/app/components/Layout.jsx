@@ -5,7 +5,9 @@ const Layout = ({ Page }) => {
     return (
         <>
             <Header />
-            <Page />
+            <main id='main' className='main'>
+                <Page />
+            </main>
         </>
     )
 }
