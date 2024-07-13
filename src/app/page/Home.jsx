@@ -5,7 +5,7 @@ import DataTable from 'react-data-table-component';
 
 import AddModal from '../components/product/AddModal';
 import { productDelete, productFilter, productFindAll, productFindOne } from '../slice/product.slice';
-import ProductColumns from './CustomTable';
+import ProductColumns from '../components/product/CustomTable';
 
 const Home = () => {
     const { findAll, findOne, filteredFindAll } = useSelector((x) => x.productSlice);
