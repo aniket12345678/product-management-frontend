@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useCallback, useEffect, useState } from 'react'
 import { Row, Col, Card, Button } from 'react-bootstrap';
 import { useDispatch, useSelector } from 'react-redux';
 import DataTable from 'react-data-table-component';
@@ -43,9 +43,9 @@ const Home = () => {
         }
     }, [filterDate])
 
-    function allProducts() {
+    const allProducts = useCallback(() => {
         dispatch(productFindAll())
-    }
+    },[dispatch])
 
     const openAddModal = () => {
         setInitialValues({
@@ -62,7 +62,7 @@ const Home = () => {
         setModalState(true);
     };
 
-    function deleteRecord(params) {
+    const deleteRecord = useCallback((params) => {
         if (window.confirm('Do you want to remove the data')) {
             dispatch(productDelete({ id: params })).unwrap().then((result) => {
                 allProducts();
@@ -70,9 +70,9 @@ const Home = () => {
                 console.log('err:- ', err);
             });
         }
-    }
+    }, [dispatch, allProducts])
 
-    const searchProducts = (params) => {
+    const searchProducts = useCallback((params) => {
         const output = findAll.filter((x) => {
             return (
                 x.product.toLowerCase().includes(params.toLowerCase()) ||
@@ -80,11 +80,11 @@ const Home = () => {
             )
         });
         dispatch(productFilter(output));
-    }
+    }, [findAll, dispatch])
 
-    const changeDate = (key, value) => {
+    const changeDate = useCallback((key, value) => {
         setFilterDate({ ...filterDate, [key]: value });
-    }
+    }, [filterDate])
 
     const handleFormSubmit = (values, resetForm, setPreviewImg) => {
         const action = values.id ? productUpdate : productAdd;
