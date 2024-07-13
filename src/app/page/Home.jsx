@@ -11,6 +11,7 @@ const Home = () => {
     const { findAll, findOne, filteredFindAll } = useSelector((x) => x.productSlice);
     const dispatch = useDispatch();
     const [modalState, setModalState] = useState(false);
+    const [modalType, setModalType] = useState('add');
 
     useEffect(() => {
         allProducts();
@@ -25,7 +26,9 @@ const Home = () => {
     }
 
     function updateRecord(params) {
-        dispatch(productFindOne({ id: params }))
+        setModalType('update')
+        dispatch(productFindOne({ id: params }));
+        changeModalState(true)
     }
 
     function deleteRecord(params) {
@@ -73,7 +76,13 @@ const Home = () => {
                     </Card>
                 </Col>
             </Row>
-            <AddModal show={modalState} allProducts={allProducts} changeModalState={changeModalState} />
+            <AddModal
+                show={modalState}
+                allProducts={allProducts}
+                changeModalState={changeModalState}
+                findOne={findOne}
+                type={modalType}
+            />
         </div>
     )
 }

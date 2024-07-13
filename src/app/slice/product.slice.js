@@ -1,6 +1,7 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import { toastMessage } from "../common/methods";
 import { API } from "../config/api";
+import moment from "moment";
 
 export const productAdd = createAsyncThunk('/product/add',
     async (values) => {
@@ -24,15 +25,15 @@ export const productUpdate = createAsyncThunk('/product/update',
         try {
             console.log('productUpdate values:- ', values);
             const response = await API.post('/product/update', values);
-            // if (response.data.code === 200) {
-            //     toastMessage('success', response.data.message);
-            // }
+            if (response.data.code === 200) {
+                toastMessage('success', response.data.message);
+            }
             return response.data;
         } catch (error) {
             console.log('productUpdate -> slice -> error');
-            // toastMessage('error', 'We are facing some technical issue');
-            // const errorObj = { ...error }
-            // throw errorObj;
+            toastMessage('error', 'We are facing some technical issue');
+            const errorObj = { ...error }
+            throw errorObj;
         }
     }
 );
@@ -44,9 +45,9 @@ export const productFindAll = createAsyncThunk('/product/find/all',
             return response.data;
         } catch (error) {
             console.log('productFindAll -> slice -> error');
-            // toastMessage('error', 'We are facing some technical issue');
-            // const errorObj = { ...error }
-            // throw errorObj;
+            toastMessage('error', 'We are facing some technical issue');
+            const errorObj = { ...error }
+            throw errorObj;
         }
     }
 );
@@ -58,9 +59,9 @@ export const productFindOne = createAsyncThunk('/product/find/one',
             return response.data
         } catch (error) {
             console.log('productFindOne -> slice -> error');
-            // toastMessage('error', 'We are facing some technical issue');
-            // const errorObj = { ...error }
-            // throw errorObj;
+            toastMessage('error', 'We are facing some technical issue');
+            const errorObj = { ...error }
+            throw errorObj;
         }
     }
 );
@@ -91,7 +92,11 @@ export const productFilter = createAsyncThunk('filter',
 const initialState = {
     findAll: [],
     filteredFindAll: [],
-    findOne: {}
+    findOne: {
+        product: '',
+        price: '',
+        creation_date: moment().format('YYYY-MM-DD'),
+    }
 }
 
 export const productSlice = createSlice({
