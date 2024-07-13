@@ -2,16 +2,10 @@ import { useFormik } from 'formik';
 import React, { useState } from 'react'
 import { Modal, Button, Form, Row, Col } from 'react-bootstrap'
 import * as yup from 'yup'
-import moment from 'moment'
-import { useDispatch } from 'react-redux';
 
-import { productAdd, productUpdate } from '../../slice/product.slice';
-
-const AddModal = (props) => {
-    const dispatch = useDispatch();
-    const { show, changeModalState, findOne, allProducts, type } = props;
+const AddUpdateModal = (props) => {
+    const { show, handleClose, initialValues, onSubmit, setStoreImg } = props;
     const [previewImg, setPreviewImg] = useState(null);
-    const [storeImg, setStoreImg] = useState('');
 
     //************************************** yup validation **************************************//
 
@@ -24,41 +18,10 @@ const AddModal = (props) => {
     //************************************** Formik **************************************//
 
     const { values, errors, handleChange, handleSubmit, resetForm } = useFormik({
-        initialValues: type === 'add' ? {
-            product: '',
-            price: '',
-            creation_date: moment().format('YYYY-MM-DD'),
-        } : findOne,
+        initialValues: initialValues,
         validationSchema: validateFields,
-        enableReinitialize: type === 'add' ? false : true,
-        onSubmit: (values) => {
-            const formdata = new FormData();
-            formdata.append('attachments', storeImg);
-            formdata.append('data', JSON.stringify(values));
-            if (type === 'add') {
-                dispatch(productAdd(formdata)).unwrap().then((response) => {
-                    if (response.code === 200) {
-                        allProducts();
-                        setStoreImg('');
-                        setPreviewImg(null);
-                        closeModal();
-                    }
-                }).catch((err) => {
-                    console.log(err);
-                });
-            } else {
-                dispatch(productUpdate(formdata)).unwrap().then((response) => {
-                    if (response.code === 200) {
-                        allProducts();
-                        setStoreImg('');
-                        setPreviewImg(null);
-                        closeModal();
-                    }
-                }).catch((err) => {
-                    console.log(err);
-                });
-            }
-        }
+        enableReinitialize: true,
+        onSubmit: () => onSubmit(values, resetForm,setPreviewImg),
     });
 
     //************************************** File handling **************************************//
@@ -72,21 +35,16 @@ const AddModal = (props) => {
         reader.readAsDataURL(data);
     }
 
-    const closeModal = () => {
-        resetForm();
-        changeModalState(false);
-    }
-
     return (
         <Modal
             show={show}
-            onHide={() => closeModal()}
+            onHide={() => handleClose()}
             backdrop="static"
             keyboard={false}
             centered
         >
             <Modal.Header closeButton>
-                <Modal.Title>{type === 'add' ? 'Add' : 'Update'} product</Modal.Title>
+                <Modal.Title>product</Modal.Title>
             </Modal.Header>
             <Form onSubmit={handleSubmit}>
                 <Modal.Body>
@@ -160,4 +118,4 @@ const AddModal = (props) => {
     )
 }
 
-export default AddModal
+export default AddUpdateModal

@@ -52,20 +52,6 @@ export const productFindAll = createAsyncThunk('/product/find/all',
     }
 );
 
-export const productFindOne = createAsyncThunk('/product/find/one',
-    async (values) => {
-        try {
-            const response = await API.post('/product/find/one', values)
-            return response.data
-        } catch (error) {
-            console.log('productFindOne -> slice -> error');
-            toastMessage('error', 'We are facing some technical issue');
-            const errorObj = { ...error }
-            throw errorObj;
-        }
-    }
-);
-
 export const productDelete = createAsyncThunk('/product/delete',
     async (values) => {
         try {
@@ -107,9 +93,6 @@ export const productSlice = createSlice({
         builder.addCase(productFindAll.fulfilled, (state, action) => {
             state.findAll = action.payload.data;
             state.filteredFindAll = action.payload.data;
-        });
-        builder.addCase(productFindOne.fulfilled, (state, action) => {
-            state.findOne = action.payload.data;
         });
         builder.addCase(productFilter.fulfilled, (state, action) => {
             state.filteredFindAll = action.payload;
