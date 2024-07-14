@@ -1,14 +1,18 @@
-import React from 'react'
+import React, { lazy, Suspense } from 'react'
 import { BrowserRouter, Route, Routes } from 'react-router-dom'
-import Home from '../page/Home'
-import Layout from '../components/Layout'
+import Loader from '../components/Loader';
+
+const Home = lazy(() => import('../page/Home'));
+const Layout = lazy(() => import('../components/Layout'));
 
 const Routing = () => {
     return (
         <BrowserRouter>
-            <Routes>
-                <Route path='/' element={<Layout Page={Home} />} />
-            </Routes>
+            <Suspense fallback={<Loader/>}>
+                <Routes>
+                    <Route path='/' element={<Layout Page={Home} />} />
+                </Routes>
+            </Suspense>
         </BrowserRouter>
     )
 }

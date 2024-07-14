@@ -11,7 +11,7 @@ const AddUpdateModal = (props) => {
 
     const validateFields = yup.object().shape({
         product: yup.string().required('Enter category'),
-        price: yup.number().positive('Amount cannot be negative').required('Enter price'),
+        price: yup.number().min(1).max(10000).positive('Amount cannot be negative').required('Enter price'),
         creation_date: yup.string().required('Enter date'),
     });
 
@@ -84,7 +84,7 @@ const AddUpdateModal = (props) => {
                                     value={values.creation_date}
                                     onChange={handleChange}
                                 />
-                                {errors.price && <div className='formik-error'>{errors.price}</div>}
+                                {errors.creation_date && <div className='formik-error'>{errors.creation_date}</div>}
                             </Form.Group>
                         </Col>
                         <Col md='6'>
