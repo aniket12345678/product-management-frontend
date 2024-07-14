@@ -26,7 +26,7 @@ const ProductColumns = ({ openUpdateModal, deleteRecord }) => {
             selector: x => <img
                 width={38}
                 src={`${process.env.REACT_APP_BACKEND_URL}/product/img/${x.id}?${new Date().getTime()}`}
-                alt=""
+                alt="product-image"
             />,
         },
         {
